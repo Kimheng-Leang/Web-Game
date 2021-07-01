@@ -1,6 +1,6 @@
 <template>
 <div>
-    <Header msg="LOG IN" Hightlight="highlight_Store"/>
+    <Header msg="LOG IN" Hightlight="highlight_Store" />
     <main>
         <section>
             <div class="Back-to-store">
@@ -38,8 +38,8 @@
                             <li>Free</li>
                         </ul>
                     </div>
-                    <ul v-if="localStore.OriginalPrice">
-                        <li><a :href="'/Checkout/' + formGame.id"><button class="btn btn-danger " style="margin-right:1rem">BUY NOW</button></a></li>
+                    <ul v-if="localStore.OriginalPrice>0">
+                        <li><a :href="'/Checkout'+ formGame.id"><button class="btn btn-danger " style="margin-right:1rem">BUY NOW</button></a></li>
                         <li><button class="btn btn-danger">ADD TO WISHLIST</button></li>
                     </ul>
                     <ul v-else>
@@ -73,7 +73,7 @@
         <section>
             <div class="line"></div>
             <div>
-                <span class="Title">GAME INFORMATION: {{user.uid}}</span>
+                <span class="Title">GAME INFORMATION:</span>
             </div>
             <div>
                 <span>Developer: Name_Dev</span>
@@ -94,6 +94,12 @@
                 <span class="Title">RATING AND REVIEW</span>
             </div>
             <div class="rating-review">
+                <div>
+                    <h6>You logged in as</h6>
+                    <p>Name: {{ user.displayName }}</p>
+                    <p>User ID: {{user.uid}}</p>
+                    <div class="line"></div>
+                </div>
                 <div v-for="comment in localStoreComment.slice(0,length)" :key="comment._id">
                     <div class="rating-user">
                         <div class="user">
@@ -138,7 +144,7 @@ import Header from './Header'
 import Footer from './Footer'
 import { useRoute } from 'vue-router'
 import axios from 'axios';
-import getUser from '../composables/getUser'
+import getUser from '../composables/getUser';
 export default {
     data(){
         return{
@@ -177,18 +183,13 @@ export default {
                 username:'',
                 gameid:'',
                 stars:0,
-            }
+            },
         }
     },
     components:{
         Header,
-        Footer
+        Footer,
     },
-    setup(){
-        const {user} = getUser()
-        return {user}
-    }
-    ,
     methods:{
         moveOver:function(index){
             const rating = document.querySelector('.rating');
@@ -297,16 +298,23 @@ export default {
             }
         }
     },
+    setup(){
+        const {user} = getUser()
+        return {user};
+    },
     async mounted(){
         const route = useRoute();
         const rating = document.querySelector('.rating');
         const urlName = route.name
         const editType=urlName.split("/")
         this.formGame.id=route.params.id;
-        const userID="7685"
+        console.log(this.user.displayName)
+        const userID= this.user.uid
+        console.log(userID)
         //get rating by Game ID
         const getRatingByGameID = await axios.get(`http://localhost:2000/getRating/${this.formGame.id}`);
         // console.log(getRatingByGameID);
+        
         getRatingByGameID.data.forEach(element => {
             if(element.userID==userID){
                 this.getRatingByUserID.id=element._id;
