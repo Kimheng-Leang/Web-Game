@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import getUser from "./composables/getUser"
 export default {
   name:"app",
   methods:{
@@ -18,6 +19,10 @@ export default {
     clickLogin(result){
       console.log(result);
     }
+  },
+  setup(){
+    const {user} = getUser();
+    return {user}
   }
 }
 </script>

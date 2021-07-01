@@ -38,8 +38,8 @@
                             <li>Free</li>
                         </ul>
                     </div>
-                    <ul v-if="localStore.OriginalPrice>0">
-                        <li><a href="/Checkout"><button class="btn btn-danger " style="margin-right:1rem">BUY NOW</button></a></li>
+                    <ul v-if="localStore.OriginalPrice">
+                        <li><a :href="'/Checkout/' + formGame.id"><button class="btn btn-danger " style="margin-right:1rem">BUY NOW</button></a></li>
                         <li><button class="btn btn-danger">ADD TO WISHLIST</button></li>
                     </ul>
                     <ul v-else>
@@ -73,7 +73,7 @@
         <section>
             <div class="line"></div>
             <div>
-                <span class="Title">GAME INFORMATION:</span>
+                <span class="Title">GAME INFORMATION: {{user.uid}}</span>
             </div>
             <div>
                 <span>Developer: Name_Dev</span>
@@ -184,6 +184,11 @@ export default {
         Header,
         Footer
     },
+    setup(){
+        const {user} = getUser()
+        return {user}
+    }
+    ,
     methods:{
         moveOver:function(index){
             const rating = document.querySelector('.rating');
