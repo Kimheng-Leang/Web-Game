@@ -15,6 +15,7 @@ import faq from '../components/Faq'
 import Auth from '../components/Auth'
 import {projectAuth} from '../firebase/config'
 import NewsDetail from '../components/NewsDetail'
+import AdminAuth from  "../components/adminAuth"
 //auth guard
 const requiredAuth = (to, from, next) => {
   let user = projectAuth.currentUser;
@@ -35,6 +36,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Auth
+  },
+  {
+    path: "/admin/login",
+    name: "AdminAuth",
+    component: AdminAuth
   },
    //{
   //   path: '/register',

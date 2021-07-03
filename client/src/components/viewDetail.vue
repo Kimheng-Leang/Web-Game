@@ -39,8 +39,8 @@
                         </ul>
                     </div>
                     <ul v-if="localStore.OriginalPrice>0">
-                        <li><a :href="'/Checkout'+ formGame.id"><button class="btn btn-danger " style="margin-right:1rem">BUY NOW</button></a></li>
-                        <li><button class="btn btn-danger">ADD TO WISHLIST</button></li>
+                        <li><a :href="'/Checkout/'+ formGame.id" ><button class="btn btn-danger " style="margin-right:1rem">BUY NOW</button></a></li>
+                        <li><button class="btn btn-danger" @click="addWishList">ADD TO WISHLIST</button></li>
                     </ul>
                     <ul v-else>
                         <form :action="`http://localhost:2000/download/${formGame.id}`" method="GET">
@@ -82,7 +82,7 @@
                 <span>Publisher: Name_PUB</span>
             </div>
             <div>
-                <span>Average Rate: {{formGame.rating}}/5</span>
+                <span>Average Rating: {{ formGame.rating }} /5</span>
             </div>
             <div>
                 <span>SUPPORTED OS: <i class="fab fa-apple" style="margin-right:0.2rem"></i> <i class="fab fa-windows"></i></span>
@@ -94,12 +94,6 @@
                 <span class="Title">RATING AND REVIEW</span>
             </div>
             <div class="rating-review">
-                <div>
-                    <h6>You logged in as</h6>
-                    <p>Name: {{ user.displayName }}</p>
-                    <p>User ID: {{user.uid}}</p>
-                    <div class="line"></div>
-                </div>
                 <div v-for="comment in localStoreComment.slice(0,length)" :key="comment._id">
                     <div class="rating-user">
                         <div class="user">
@@ -145,6 +139,8 @@ import Footer from './Footer'
 import { useRoute } from 'vue-router'
 import axios from 'axios';
 import getUser from '../composables/getUser';
+import useCollection from  "../composables/useCollection"
+import { timestamp } from '../firebase/config';
 export default {
     data(){
         return{
@@ -191,6 +187,20 @@ export default {
         Footer,
     },
     methods:{
+        addWishList(){
+            const {error, addDoc} = useCollection("wishlist")
+            const {user} = getUser();
+            const wishlist = {
+                user_email : user.value.email,
+                game_id : this.formGame.id,
+                createdAt : timestamp(),
+                game_title : this.formGame.title,
+                game_rating : this.formGame.rating,
+                game_price : this.formGame.discount_price 
+            } 
+            addDoc(wishlist)
+            
+        },
         moveOver:function(index){
             const rating = document.querySelector('.rating');
             // console.log(rating.children[0]);
@@ -298,19 +308,13 @@ export default {
             }
         }
     },
-    setup(){
-        const {user} = getUser()
-        return {user};
-    },
     async mounted(){
         const route = useRoute();
         const rating = document.querySelector('.rating');
         const urlName = route.name
         const editType=urlName.split("/")
         this.formGame.id=route.params.id;
-        console.log(this.user.displayName)
-        const userID= this.user.uid
-        console.log(userID)
+        const userID= "1234"
         //get rating by Game ID
         const getRatingByGameID = await axios.get(`http://localhost:2000/getRating/${this.formGame.id}`);
         // console.log(getRatingByGameID);
@@ -366,6 +370,7 @@ export default {
             this.localStoreComment.push(element)
         })
     },
+    
 }
 </script>
 

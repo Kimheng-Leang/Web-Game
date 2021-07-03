@@ -31,7 +31,6 @@ export default {
     data(){
         return{
             String:``,
-            user: null
         }
     },
     props:{
@@ -49,7 +48,9 @@ export default {
     },
     setup() {
         const {user} = getUser();
-        
+        if(user.displayName === null){
+            user.displayName == "LOGIN" 
+        }
         return {
             user
         }

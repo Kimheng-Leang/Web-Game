@@ -44,7 +44,7 @@
                     <li>{{topGameOfMonth.price}} RIELS</li>
                     <li class="discount">{{topGameOfMonth.original_price}} RIELS</li>
              
-                    <li><a href="'/Checkout/'+ formGame.id"><button class="btn btn-danger ">BUY NOW</button></a></li>
+                    <li><a :href="'/Checkout/'+ topGameOfMonth.id"><button class="btn btn-danger ">BUY NOW</button></a></li>
                 </ul>
             </div>
         </section>

@@ -48,9 +48,9 @@
                 <div class="name_id_user">
                     <span>CUSTOMER NAME : USER NAME </span>
                     <span>CUSTOMER ID : 1234 1234 </span>
-                    <ul class="buy_button">
-                        <li>BUY FOR MYSELF</li>
-                        <li style="margin-left: 1.5em;">GIFE FOR FRIENDS</li>
+                    <ul class="buy_button" >
+                        <li @click="buyForself">BUY FOR MYSELF</li>
+                        <li @click="giftforself" style="margin-left: 1.5em;">GIFE FOR FRIENDS</li>
                     </ul>
                 </div>
             </section>
@@ -76,6 +76,12 @@ export default {
             }
         }
     },
+    methods:{
+        buyProduct(){
+            console.log("buy")
+        }
+    }
+    ,
     components:{
         Header,
         Footer
