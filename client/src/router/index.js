@@ -15,15 +15,14 @@ import faq from '../components/Faq'
 import Auth from '../components/Auth'
 import {projectAuth} from '../firebase/config'
 import NewsDetail from '../components/NewsDetail'
-import AdminAuth from  "../components/adminAuth"
 //auth guard
 const requiredAuth = (to, from, next) => {
   let user = projectAuth.currentUser;
-  console.log("current user in auth guard : " + user.displayName);
   if (!user) {
+    console.log(user)
     next({ name: "userpage" });
   }
-  next();
+  next()
 };
 
 const routes = [
@@ -37,11 +36,6 @@ const routes = [
     name: 'Login',
     component: Auth
   },
-  {
-    path: "/admin/login",
-    name: "AdminAuth",
-    component: AdminAuth
-  },
    //{
   //   path: '/register',
   //   name: 'register',
@@ -51,6 +45,7 @@ const routes = [
     path: "/admin",
     name: "Adminpanel",
     component: Adminpanel,
+    beforeEnter:requiredAuth
   },
   {
     path:'/gameDetail/:id',
@@ -92,11 +87,13 @@ const routes = [
     path: "/admin/editGame/:id",
     name: "/admin/editGame/:id",
     component: editGame,
+    beforeEnter:requiredAuth
   },
   {
     path: "/admin/editNews/:id",
     name: "/admin/editNews/:id",
     component: editGame,
+    beforeEnter:requiredAuth
   },
   {
     path:'/Faq',

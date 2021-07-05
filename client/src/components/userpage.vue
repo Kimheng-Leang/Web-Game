@@ -36,7 +36,8 @@
         <div id="card_payment" class="layout">
           <div class="title">
             <span class="title">CARD & PAYMENT</span>
-             <button @click="showCard"  class="addcard-btn" >Add Card <i class="fas fa-plus"></i></button>
+             <button @click="showCard" v-if="!showAddCard"  class="addcard-btn" >ADD NEW CARD <i class="fas fa-plus-circle"></i></button>
+             <button @click="showCard" v-if="showAddCard"  class="addcard-btn" >CLOSE REGISTRATION <i class="fas fa-times-circle"></i></button>
           </div>
          <card-registration v-if="showAddCard" />
           <!-- a user can  have more than one card
@@ -159,7 +160,7 @@ div.layout div.title {
 }
 div#user_inform button {
   padding: 10px 20px 10px 20px;
-  background: red;
+  background: var(--primary-color);
   border: none;
   border-radius: 50px;
   font-weight: bolder;
@@ -168,7 +169,7 @@ div#user_inform button {
 }
 .addcard-btn {
   padding: 5px 10px 5px 10px;
-  background: red;
+  background: var(--primary-color);
   border: none;
   border-radius: 30px;
   font-weight: bolder;

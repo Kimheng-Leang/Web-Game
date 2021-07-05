@@ -198,7 +198,8 @@ export default {
                 createdAt : timestamp(),
                 game_title : this.formGame.title,
                 game_rating : this.formGame.rating,
-                game_price : this.formGame.discount_price 
+                game_price : this.formGame.original_price,
+                game_discount : this.formGame.discount_price
             }
             addDoc(wishlist)
             

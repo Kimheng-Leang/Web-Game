@@ -46,8 +46,8 @@
                 TOTAL: {{game.price}} RIELS
             </div>
                 <div class="name_id_user">
-                    <span >CUSTOMER NAME : {{user.displayName}}</span>
-                    <span >CUSTOMER ID : {{user.uid}}</span>
+                    <span >CUSTOMER NAME : {{userDisplayName}}</span>
+                    <span >CUSTOMER ID : {{userID}}</span>
                     <ul class="buy_button" >
                         <li @click="buyProduct">BUY FOR MYSELF</li>
                         <li @click="giftforself" style="margin-left: 1.5em;">GIFE FOR FRIENDS</li>
@@ -76,6 +76,10 @@ export default {
                 price:'',
                 support_os:'',
             },
+            user:{
+                uid: "",
+                displayName: ""
+            }
         }
     },
     methods:{
@@ -84,17 +88,30 @@ export default {
             
         }
     },
-    computed:{
-
-    },
     components:{
         Header,
         Footer
     },
+    computed:{
+        userDisplayName(){
+            const {user} = getUser()
+            if(user.value){
+                return user.value.displayName
+            }
+            return ""
+        },
+        userID(){
+            const  {user} = getUser()
+            if(user.value){
+                return user.value.uid
+            }
+            return ""
+        }
+        
+    },
     async mounted(){
         const route = useRoute();
         const game_id=route.params.id;
-        console.log(game_id);
         const response = await axios.get(`http://localhost:2000/admin/getGames/${game_id}`);
         this.game.id=response.data._id;
         this.game.title=response.data.Title;
@@ -103,10 +120,6 @@ export default {
         this.game.support_os=response.data.SupportOS;
         
     },
-    setup(){
-         const {user} = getUser()
-         return {user}    
-    }
     
 }
 </script>

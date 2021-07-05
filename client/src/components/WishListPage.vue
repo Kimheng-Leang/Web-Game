@@ -1,14 +1,17 @@
 <template>
   <div>
     <div>
-      <div class="item_buy" v-for="wishlist in formatteddocument" :key="wishlist.game_id">
+      <div v-if="formatteddocument < 1">
+        <p style="color:grey">There is no Wishlist</p>
+      </div>
+      <div v-else class="item_buy" v-for="wishlist in formatteddocument" :key="wishlist.game_id">
           <a :href="'/Checkout/'+ wishlist.game_id" >
             <div class="game_item">
               <div class="Game-img" :style="{'background-image': `url(${image})`}"> 
               </div>
               <div>   
                 <p>Game title: {{wishlist.game_title}}</p>
-                <p>Game price: {{wishlist.game_price}} Riels</p>
+                <p>Game price: {{ Number(wishlist.game_price) -  Number(wishlist.game_discount)}} Riels</p>
                 <p>Game rating: {{wishlist.game_rating}}/5</p>
               </div>
             </div>
