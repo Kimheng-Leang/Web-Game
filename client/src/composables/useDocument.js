@@ -22,6 +22,7 @@ const useDocument =(collection, id)	=> {
 		}
 
 	} 
+	
 	return {error, pending, deleteDoc}
 }
 export default useDocument

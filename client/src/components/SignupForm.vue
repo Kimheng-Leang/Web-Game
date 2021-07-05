@@ -1,11 +1,12 @@
 <template>
 	<form @submit.prevent="handleSubmit">
+		<div class="error">{{ error }}</div>
 		<input type="text" required placeholder="Enter your name to be called" v-model="displayName">
 		<input type="email" required placeholder="Email" v-model="email">
 		<input type="password" required placeholder="Password" v-model="password">
 		<input type="password" required placeholder="Confirmed Password" v-model="confirmedPassword">
-		<div class="error">{{ error }}</div>
-
+		
+		
 		<button class="button-auth">Sign up</button>
 
 	</form>
@@ -22,9 +23,11 @@ export default {
 		const password = ref('');
 		const displayName = ref('');
 		const confirmedPassword = ref('');
+		const role = ref("")
 		const handleSubmit = async() => {
-			if(confirmedPassword.value === password.value){
-				await signup(email.value, password.value, displayName.value);
+			if(confirmedPassword.value === password.value){ 
+				role.value = "user"
+				await signup(email.value, password.value, displayName.value,role.value);
 			}else{
 				error.value = "Passwords are not match"
 			}
@@ -32,9 +35,7 @@ export default {
 				context.emit('signup');
 			}
 			email.value = '';
-			password.value = '';
 			displayName.value = '';
-			confirmedPassword.value = '';
 		}
 		return {
 			email, password, handleSubmit, displayName, error,confirmedPassword

@@ -76,6 +76,7 @@ main{
     font-weight: bold;
     font-size: 16px;
     background-color:  #303841;
+    min-height: 90vh;
 }
 main section{
     display: block;

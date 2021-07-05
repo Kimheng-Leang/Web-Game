@@ -46,10 +46,10 @@
                 TOTAL: {{game.price}} RIELS
             </div>
                 <div class="name_id_user">
-                    <span>CUSTOMER NAME : USER NAME </span>
-                    <span>CUSTOMER ID : 1234 1234 </span>
+                    <span >CUSTOMER NAME : {{user.displayName}}</span>
+                    <span >CUSTOMER ID : {{user.uid}}</span>
                     <ul class="buy_button" >
-                        <li @click="buyForself">BUY FOR MYSELF</li>
+                        <li @click="buyProduct">BUY FOR MYSELF</li>
                         <li @click="giftforself" style="margin-left: 1.5em;">GIFE FOR FRIENDS</li>
                     </ul>
                 </div>
@@ -64,6 +64,8 @@ import Header from './Header'
 import Footer from './Footer'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
+import getUser from "../composables/getUser"
+
 export default {
     data(){
         return{
@@ -73,15 +75,18 @@ export default {
                 title:'',
                 price:'',
                 support_os:'',
-            }
+            },
         }
     },
     methods:{
         buyProduct(){
             console.log("buy")
+            
         }
-    }
-    ,
+    },
+    computed:{
+
+    },
     components:{
         Header,
         Footer
@@ -96,7 +101,13 @@ export default {
         this.game.price=response.data.Price;
         this.game.image=require('../../../server/public/'+response.data.Files[0]);
         this.game.support_os=response.data.SupportOS;
+        
+    },
+    setup(){
+         const {user} = getUser()
+         return {user}    
     }
+    
 }
 </script>
 
@@ -114,6 +125,7 @@ main{
     font-weight: bold;
     font-size: 16px;
     background-color:  #303841;
+    min-height: 90vh;
 }
 main section{
     display: block;

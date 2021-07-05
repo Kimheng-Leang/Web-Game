@@ -36,9 +36,9 @@
         <div id="card_payment" class="layout">
           <div class="title">
             <span class="title">CARD & PAYMENT</span>
+             <button @click="showCard"  class="addcard-btn" >Add Card <i class="fas fa-plus"></i></button>
           </div>
-          <button @click="showCard"  class="addcard-btn" >Add Card <i class="fas fa-plus"></i></button>
-          <card-registration v-if="showAddCard" />
+         <card-registration v-if="showAddCard" />
           <!-- a user can  have more than one card
           and this div maybe need to loop, and also take data from datbase  -->
           <Card/>

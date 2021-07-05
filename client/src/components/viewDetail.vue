@@ -140,7 +140,9 @@ import { useRoute } from 'vue-router'
 import axios from 'axios';
 import getUser from '../composables/getUser';
 import useCollection from  "../composables/useCollection"
+import getCollection from "../composables/getCollection"
 import { timestamp } from '../firebase/config';
+import useDocument from '../composables/useDocument';
 export default {
     data(){
         return{
@@ -188,7 +190,7 @@ export default {
     },
     methods:{
         addWishList(){
-            const {error, addDoc} = useCollection("wishlist")
+            const {error, addDoc} = useCollection("wishlist" )
             const {user} = getUser();
             const wishlist = {
                 user_email : user.value.email,
@@ -197,7 +199,7 @@ export default {
                 game_title : this.formGame.title,
                 game_rating : this.formGame.rating,
                 game_price : this.formGame.discount_price 
-            } 
+            }
             addDoc(wishlist)
             
         },
