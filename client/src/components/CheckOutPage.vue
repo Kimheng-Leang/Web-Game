@@ -52,10 +52,13 @@
                         <li @click="buyProduct">BUY FOR MYSELF</li>
                         <li @click="giftforself" style="margin-left: 1.5em;">GIFE FOR FRIENDS</li>
                     </ul>
-                </div>
-            </section>
-        </main>
-        <Footer/>
+            </div>
+            <div>
+                
+            </div>
+        </section>
+    </main>
+<Footer/>
     </div>
 </template>
 
@@ -65,6 +68,7 @@ import Footer from './Footer'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 import getUser from "../composables/getUser"
+import getCollection from "../composables/getCollection"
 
 export default {
     data(){

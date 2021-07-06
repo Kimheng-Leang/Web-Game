@@ -43,7 +43,7 @@
 			<span class="validity"></span>
 		</div>
 		<div>
-			<label>Top-up Amount in USD: </label>
+			<label>Chargable Amount in RIELS: </label>
 			<input class="money" type="number" v-model="amount" step="0.00000001" required/>
 			<span class="validity"></span>
 			<input type="submit" value="Add Card"/>
