@@ -17,7 +17,7 @@
               v-if="card.card_number[0] === '5' && card.card_number[1] === '1'"
             ></i>
             <div class="card_infor">
-              <span>**** **** {{card.card_number.substring(10, 14)}}</span>
+              <span>**** **** {{card.card_number.substring(12, 16)}}</span>
               <span>Expiration {{ card.expired_date.substring(2,4)}}/{{ card.expired_date.substring(5,7)}}</span>
             </div>
             </div>

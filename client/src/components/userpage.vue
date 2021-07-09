@@ -8,7 +8,7 @@
             <span class="title">USER INFORMATION</span>
             <button @click="handleClick">LOG OUT</button>
           </div>
-          <a style="padding:10px;margin-bottom:5px;" class="go-admin" href="/admin">Go to Admin Page</a>
+          <a v-if="user.email === 'admin@anachakgame.com'" style="padding:10px;margin-bottom:5px;" class="go-admin" href="/admin">Go to Admin Page</a>
           <!-- this data need to generate auto by system -->
           <div id="information">
             <i class="far fa-user-circle icon-email"></i>

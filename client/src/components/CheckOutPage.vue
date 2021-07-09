@@ -58,6 +58,9 @@
                 <div v-if="errorStatus" class="error">
                         {{ errorMessage }}
                 </div>
+                <div v-if="successStatus" class="success">
+                        {{ successMessage }}
+                </div>
                 <div v-if="cards < 1">
 
                 </div>
@@ -88,6 +91,9 @@
             <div v-if="forFriend">
                 <div v-if="errorStatus" class="error">
                         {{ errorMessage }}
+                </div>
+                <div v-if="successStatus" class="success">
+                        {{ successMessage }}
                 </div>
                 <div v-if="cards < 1">
 
@@ -136,6 +142,8 @@ import useDocument from "../composables/useDocument"
 export default {
     data(){
         return{
+            successStatus : false,
+            successMessage : "",
             errorStatus : true,
             errorMessage : "* You add to select a card or add new card on User Page",
             game:{
@@ -193,6 +201,8 @@ export default {
                         game_image_path : this.game.image
                     }
                     const {addDocument} = useCollection("paid")
+                    this.successStatus = true;
+                    this.successMessage = "You haved successfully make the payment"
                     addDocument(paidGame)
                 }else{
                 this.errorStatus = true;
@@ -202,7 +212,6 @@ export default {
                     this.errorStatus = true;
                     this.errorMessage = "You need to enter your friend's email"
                 }
-                
             }
         }
         ,
@@ -234,10 +243,12 @@ export default {
                         game_image_path : this.game.image
                     }
                     const {addDocument} = useCollection("paid")
+                    this.successStatus = true;
+                    this.successMessage = "You haved successfully make the payment"
                     addDocument(paidGame)
                 }else{
-                this.errorStatus = true;
-                this.errorMessage = "You don't have enough balance"
+                    this.errorStatus = true;
+                    this.errorMessage = "You don't have enough balance"
                 }
             }
         },
@@ -493,6 +504,10 @@ div.copyright>div.line {
 /* Form for buying the game */
 .error{
     color: #ff3f80;
+}
+/* Form for buying the game */
+.success{
+    color: #38f066;
 }
 .buy-form{
     width:50vw;
