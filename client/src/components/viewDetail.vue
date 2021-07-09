@@ -142,7 +142,7 @@ import getUser from '../composables/getUser';
 import useCollection from  "../composables/useCollection"
 import getCollection from "../composables/getCollection"
 import { timestamp } from '../firebase/config';
-import useDocument from '../composables/useDocument';
+import {computed} from "vue"
 export default {
     data(){
         return{
@@ -199,7 +199,8 @@ export default {
                 game_title : this.formGame.title,
                 game_rating : this.formGame.rating,
                 game_price : this.formGame.original_price,
-                game_discount : this.formGame.discount_price
+                game_discount : this.formGame.discount_price,
+                game_image_path : this.image
             }
             addDoc(wishlist)
             
@@ -311,6 +312,22 @@ export default {
             }
         }
     },
+    setup(){
+        const {document} = getCollection("paid")
+        const paidItems = computed(() => {
+			if(document.value){
+				return document.value.map(doc => {
+					return doc
+				})
+			}else{
+				return null
+			}
+		})
+        return {
+            paidItems
+        }
+    }
+    ,
     async mounted(){
         const route = useRoute();
         const rating = document.querySelector('.rating');

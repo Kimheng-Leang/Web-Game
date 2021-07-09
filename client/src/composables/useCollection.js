@@ -7,12 +7,21 @@ const useCollection = (collection) => {
 	const addDoc = async (doc) =>{
 		error.value = null
 		try{
+			await projectFirestore.collection(collection).add(doc)	
+		}catch(err){
+			error.value = "Could not store the items"
+			console.log(err.message)
+		}	
+	}
+	const addDocument = async (doc) =>{
+		error.value = null
+		try{
 			await projectFirestore.collection(collection).add(doc)
 		}catch(err){
 			error.value = "Could not store the items"
 			console.log(err.message)
 		}	
 	}
-	return {error, addDoc}
+	return {error, addDoc, addDocument}
 }
 export default useCollection

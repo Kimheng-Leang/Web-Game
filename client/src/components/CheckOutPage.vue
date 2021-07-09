@@ -48,12 +48,72 @@
                 <div class="name_id_user">
                     <span >CUSTOMER NAME : {{userDisplayName}}</span>
                     <span >CUSTOMER ID : {{userID}}</span>
+                    <span >CUSTOMER EMAIL : {{userEmail}}</span>
                     <ul class="buy_button" >
-                        <li @click="buyProduct">BUY FOR MYSELF</li>
-                        <li @click="giftforself" style="margin-left: 1.5em;">GIFE FOR FRIENDS</li>
+                        <li v-if="!forFriend" @click="buyProduct">BUY FOR MYSELF</li>
+                        <li v-if="!buy" @click="buyForFriend">GIFE FOR FRIENDS</li>
                     </ul>
+                </div>
+            <div v-if="buy">
+                <div v-if="errorStatus" class="error">
+                        {{ errorMessage }}
+                </div>
+                <div v-if="cards < 1">
+
+                </div>
+                <div v-else class="buy-form">
+                    
+                    <div v-for="card in cards" :key="card.id" style="display:flex; align-items:center">
+                        <input type="Radio" class="radio-btn" id="card.id" @click="select(card)"  name="payment" value="card.id">
+                        <div class="card-display">
+                            <i
+                                class="fab fa-cc-mastercard"
+                                style="font-size: 30px; margin-right: 0.5rem"
+                                v-if="card.card_number[0] === '5' && card.card_number[1] === '1'"
+                            ></i> 
+                            <i
+                                class="fab fa-cc-visa"
+                                style="font-size: 30px; margin-right: 0.5rem"
+                                v-if="card.card_number[0] === '4' "
+                            ></i>   
+                            **** **** **** {{ card.card_number.substring(12,16) }}
+                        </div>
+                         
+                    </div>
+                    {{pick}}
+                    <button @click="purchaseNow" class="purchase-btn">Purchase Now</button>
+                </div>
+                
             </div>
-            <div>
+            <div v-if="forFriend">
+                <div v-if="errorStatus" class="error">
+                        {{ errorMessage }}
+                </div>
+                <div v-if="cards < 1">
+
+                </div>
+                <div v-else class="buy-form">
+                    <input type="email" v-model="friend_email" placeholder="Enter Your Friend's Valid Email Address" required>
+                    <div v-for="card in cards" :key="card.id" style="display:flex; align-items:center">
+                        <input type="Radio" class="radio-btn" id="card.id" @click="select(card)"  name="payment" value="card.id">
+                        <div class="card-display">
+                            <i
+                                class="fab fa-cc-mastercard"
+                                style="font-size: 30px; margin-right: 0.5rem"
+                                v-if="card.card_number[0] === '5' && card.card_number[1] === '1'"
+                            ></i> 
+                            <i
+                                class="fab fa-cc-visa"
+                                style="font-size: 30px; margin-right: 0.5rem"
+                                v-if="card.card_number[0] === '4' "
+                            ></i>   
+                            **** **** **** {{ card.card_number.substring(12,16) }}
+                        </div>
+                         
+                    </div>
+                    {{pick}}
+                    <button @click="purchaseNowFriend" class="purchase-btn">Purchase Now</button>
+                </div>
                 
             </div>
         </section>
@@ -69,10 +129,15 @@ import axios from 'axios'
 import { useRoute } from 'vue-router'
 import getUser from "../composables/getUser"
 import getCollection from "../composables/getCollection"
-
+import {computed} from "vue"
+import useCollection from "../composables/useCollection"
+import { timestamp } from '../firebase/config'
+import useDocument from "../composables/useDocument"
 export default {
     data(){
         return{
+            errorStatus : true,
+            errorMessage : "* You add to select a card or add new card on User Page",
             game:{
                 id:'',
                 image:'',
@@ -80,17 +145,108 @@ export default {
                 price:'',
                 support_os:'',
             },
+            pick:'',
             user:{
                 uid: "",
                 displayName: ""
-            }
+            },
+            buy: false,
+            forFriend:false,
+            selectedCard : {},
+            friend_email : "",
         }
     },
     methods:{
         buyProduct(){
-            console.log("buy")
-            
+            this.buy = !this.buy
+        },
+        buyForFriend(){
+            this.forFriend = !this.forFriend
+            //Check email if exist in our authentication
+            //
+        },
+        purchaseNowFriend(){
+             if(!this.errorStatus){
+                //Check the game price and the avaible balance the card balance need to be greater than 
+                let gamePrice = parseFloat(this.game.price)
+                let cardBalance = parseFloat(this.selectedCard.amount)
+                if(this.friend_email !== ""){
+                    if(cardBalance > gamePrice){
+                    console.log("Can make the purchase")
+                    const cardBalanceAfter = cardBalance - gamePrice
+                    console.log(cardBalanceAfter)
+                    //update a payment receipt
+                    
+                    //update the card value
+                    const {updateDoc} = useDocument("card", this.selectedCard.id)
+                    updateDoc(cardBalanceAfter.toString())
+
+                    const { user } = getUser()
+                    //Check if document has the game id match with the paid
+                    
+                    const paidGame = {
+                        user_email : this.friend_email,
+                        id : this.game.id,
+                        createdAt : timestamp(),
+                        game_title : this.game.title,
+                        status : "gifted from " + this.userEmail,
+                        game_image_path : this.game.image
+                    }
+                    const {addDocument} = useCollection("paid")
+                    addDocument(paidGame)
+                }else{
+                this.errorStatus = true;
+                this.errorMessage = "You don't have enough balance"
+                }
+                }else{
+                    this.errorStatus = true;
+                    this.errorMessage = "You need to enter your friend's email"
+                }
+                
+            }
         }
+        ,
+        purchaseNow(){
+            //check if the select card is empty
+            if(!this.errorStatus){
+                //Check the game price and the avaible balance the card balance need to be greater than 
+                let gamePrice = parseFloat(this.game.price)
+                let cardBalance = parseFloat(this.selectedCard.amount)
+                if(cardBalance > gamePrice){
+                    console.log("Can make the purchase")
+                    const cardBalanceAfter = cardBalance - gamePrice
+                    console.log(cardBalanceAfter)
+                    //update a payment receipt
+                    
+                    //update the card value
+                    const {updateDoc} = useDocument("card", this.selectedCard.id)
+                    updateDoc(cardBalanceAfter.toString())
+
+                    const { user } = getUser()
+                    //Check if document has the game id match with the paid
+                    
+                    const paidGame = {
+                        user_email : user.value.email,
+                        id : this.game.id,
+                        createdAt : timestamp(),
+                        game_title : this.game.title,
+                        status : "paid",
+                        game_image_path : this.game.image
+                    }
+                    const {addDocument} = useCollection("paid")
+                    addDocument(paidGame)
+                }else{
+                this.errorStatus = true;
+                this.errorMessage = "You don't have enough balance"
+                }
+            }
+        },
+        select(id){
+            this.selectedCard = id
+            console.log(this.selectedCard)
+            this.errorStatus = false
+        }
+
     },
     components:{
         Header,
@@ -104,14 +260,42 @@ export default {
             }
             return ""
         },
+        userEmail(){
+            const {user} = getUser()
+            if(user.value){
+                return user.value.email
+            }
+            return ""
+        },
         userID(){
             const  {user} = getUser()
             if(user.value){
                 return user.value.uid
             }
             return ""
-        }
+        },
+       
         
+    },
+    setup(){
+        const {error, document} = getCollection("card");
+		const cards = computed(() => {
+			if(document.value){
+				return document.value.map(doc => {
+					return doc
+				})
+			}else{
+				return null
+			}
+            })
+        const deleteCard = async (id) => {
+        const {deleteDoc} = useDocument("card",id)
+        
+        await deleteDoc()
+            console.log("success",id)
+        }
+
+        return {error, document, cards,deleteCard}
     },
     async mounted(){
         const route = useRoute();
@@ -122,7 +306,6 @@ export default {
         this.game.price=response.data.Price;
         this.game.image=require('../../../server/public/'+response.data.Files[0]);
         this.game.support_os=response.data.SupportOS;
-        
     },
     
 }
@@ -161,7 +344,7 @@ main section{
     width: 10rem;
     border-radius: 1rem;
     padding: 0.2rem 0.5rem 0.2rem 0.5rem;
-    border:1px solid red;
+    border:1px solid var(--primary-color);
     cursor: pointer;
 }
 div.order_user {
@@ -181,7 +364,9 @@ div.information {
 div.pic_title_game {
     display: flex;
 }
-
+li{
+    margin:1rem;
+}
 div.pic_game {
     width: 11rem;
     height: 13rem; 
@@ -230,7 +415,7 @@ div.name_id_user > ul.buy_button {
     display: flex;
 }
 div.name_id_user ul.buy_button > li {
-    background-color: red;
+    background-color: var(--primary-color);
     padding: 0.5em;
     border-radius: 20px;
     cursor: pointer;
@@ -303,6 +488,63 @@ div.copyright>div.line {
     border-radius: 50%;
     background-repeat: no-repeat;
     background-size: cover;
-    border: 0.2em solid red;
+    border: 0.2em solid var(--primary-color);
 }
+/* Form for buying the game */
+.error{
+    color: #ff3f80;
+}
+.buy-form{
+    width:50vw;
+    padding:10px;
+    border: 2px solid white;
+    border-radius: 10px;
+}
+input[type='radio']:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #d1d3d1;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid white;
+    }
+    input[type='email']{
+        color: black;
+        width: 30vw;
+        border-radius: 10px;
+        outline: none;
+    }
+    input[type='radio']:checked:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: var(--primary-color);
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid white;
+    }
+    .radio-btn{
+        margin-right: 3px;
+    }
+    .card-display{
+        padding: 2px;
+        margin: 5px;
+    }
+    .purchase-btn{
+        background: var(--primary-color);
+        outline: none;
+        border-radius: 10px;
+        color: white;
+        padding: 1px 2px;
+        border: none;
+    }
 </style>

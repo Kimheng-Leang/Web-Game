@@ -8,7 +8,7 @@
             <span class="title">USER INFORMATION</span>
             <button @click="handleClick">LOG OUT</button>
           </div>
-
+          <a style="padding:10px;margin-bottom:5px;" class="go-admin" href="/admin">Go to Admin Page</a>
           <!-- this data need to generate auto by system -->
           <div id="information">
             <i class="far fa-user-circle icon-email"></i>
@@ -56,12 +56,22 @@
           and this div maybe need to loop, and also take data from datbase  -->
           <Card/>
         </div>
+
+        <!-- Paid Game  -->
+        <div id="card_payment" class="layout">
+          <div class="title">
+            <span class="title">YOUR GAME</span>
+          </div>
+          <paidItems/>
+        </div>
+
         <div id="wishlists" class="layout">
           <div class="title">
-            <span class="title">YOUR WISHLISTS</span>
+            <span class="title">YOUR WISHLIST</span>
           </div>
           <wish-lists/>
         </div>
+        
       </section>
     </main>
     <Footer />
@@ -79,6 +89,7 @@ import Card from "../components/Card.vue"
 import WishLists from "../components/WishListPage.vue"
 import CardRegistration from '../components/CardRegistration.vue';
 import getCollection from '../composables/getCollection';
+import PaidItems from '../components/paidItem.vue'
 export default {
   name: "userpage",
   data(){
@@ -96,7 +107,8 @@ export default {
     Footer,
     Card,
     WishLists,
-    CardRegistration
+    CardRegistration,
+    PaidItems
   },
   setup() {
 		const {error,logout} = useLogout();
@@ -217,6 +229,13 @@ div.item_buy {
 div.item_buy ul {
   list-style: none;
   padding-left: 2rem;
+}
+.go-admin{
+  display: block;
+  border: 1px solid white;
+  text-decoration: none;
+  color: white;
+  background-color: var(--primary-color)
 }
 
 </style>

@@ -63,7 +63,7 @@ export default {
 		padding: 10px;
 		border-radius: 20px;
 		border: 1px solid #eee;
-		color: #999;
+		color: black;
 		outline: none;
 		margin: 10px auto;
 	}

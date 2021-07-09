@@ -21,8 +21,27 @@ const useDocument =(collection, id)	=> {
 			console.log(err.message)
 		}
 
-	} 
+	}
+	const updateDoc = async (balance) =>{
+		pending.value = true
+		error.value = null
+		try{
+			const res = await docRef.update({
+				amount : balance
+			})
+			pending.value = false
+			console.log("Success")
+			return res
+		}catch(err){
+			console.log(err.message)
+			pending.value = false
+			error.value ="Can not update"
+			console.log(err.message)
+		}
+
+
+	}
 	
-	return {error, pending, deleteDoc}
+	return {error, pending, deleteDoc, updateDoc}
 }
 export default useDocument

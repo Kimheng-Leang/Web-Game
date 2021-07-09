@@ -45,7 +45,6 @@ const routes = [
     path: "/admin",
     name: "Adminpanel",
     component: Adminpanel,
-    beforeEnter:requiredAuth
   },
   {
     path:'/gameDetail/:id',

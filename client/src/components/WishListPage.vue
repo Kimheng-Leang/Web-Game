@@ -7,7 +7,7 @@
       <div v-else class="item_buy" v-for="wishlist in formatteddocument" :key="wishlist.game_id">
           <a :href="'/Checkout/'+ wishlist.game_id" >
             <div class="game_item">
-              <div class="Game-img" :style="{'background-image': `url(${image})`}"> 
+              <div class="Game-img" :style="{'background-image': `url(${wishlist.game_image_path})`}"> 
               </div>
               <div>   
                 <p>Game title: {{wishlist.game_title}}</p>
@@ -38,12 +38,10 @@
 import { computed } from '@vue/runtime-core'
 import getCollection from "../composables/getCollection"
 import useDocument from "../composables/useDocument"
-import axios from 'axios';
 export default {
   data(){
     return {
       image:'',
-      id: "60bb1148cf7a3b4610ec4f44"
     }
   },
   setup(){
@@ -68,11 +66,6 @@ export default {
 
 		return {error, document, formatteddocument,deleteWishlist}
   },
-  async mounted(){
-    const response= await axios.get(`http://localhost:2000/admin/getGames/${this.id}`);
-    this.localStore=response.data;
-    this.image=require('../../../server/public/'+this.localStore.Files[0])
-  }
 }
 </script>
 
@@ -82,6 +75,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     border-bottom: .5px solid white;
+    margin-bottom: 1rem;
   }
   .game_item{
     display: flex;

@@ -1,14 +1,14 @@
 <template>
-    <div>
+    <div >
         <Header msg="ADMIN" ></Header>
-        <main>
-        <section>
+        <main v-if="userEmail === 'admin@anachakgame.com'">
+        <section >
             <div class="Admin">
                 <div>
-                    <span>ADMINSTATION PANEL</span>
+                    <span>ADMINSTATION PANEL </span>
                 </div>
                 <div>
-                    <button class="btn btn-danger">LOG OUT</button>
+                    <button class="btn btn-danger" @click="logout">LOG OUT</button>
                 </div>
             </div>
             <div class="line"></div>
@@ -282,6 +282,9 @@
             <div class="line"></div>
         </section>
         </main>
+        <main v-else style="height:90vh">
+            <h1 style="display: flex; justify-content: center; align-items: center; height: 100%">You cannot access to Admin panel</h1>
+        </main>
         <Footer></Footer>
     </div>
 </template>
@@ -292,10 +295,12 @@ import Footer from './Footer'
 import axios from 'axios'
 import {mapGetters} from "vuex"
 import {useStore} from 'vuex'
+import getUser from "../composables/getUser"
 export default {
     name:"AdminPanel",
     data(){
         return{
+            allow:false,
             localGameStore:[],
             localNewsStore:[],
             selectedFile:null,
@@ -591,7 +596,14 @@ export default {
                 }
             }
             console.log(this.formGame.support_os);
-        }
+        },
+        userEmail(){
+            const {user} = getUser()
+            if(user.value){
+                return user.value.email
+            }
+            return ""
+        },
     }
 }
 </script>
