@@ -84,7 +84,9 @@
                          
                     </div>
                     {{pick}}
-                    <button @click="purchaseNow" class="purchase-btn">Purchase Now</button>
+                    <form v-if="canBuy" action="http://localhost:2000/download/${game.id}" method="GET">
+                        <button @click="purchaseNow" type="submit" class="purchase-btn">Purchase Now</button>
+                    </form>
                 </div>
                 
             </div>
@@ -118,7 +120,9 @@
                          
                     </div>
                     {{pick}}
-                    <button @click="purchaseNowFriend" class="purchase-btn">Purchase Now</button>
+                    <form v-if="canBuy" action="http://localhost:2000/download/${game.id}" method="GET">
+                        <button @click="purchaseNowFriend" type="submit" class="purchase-btn">Purchase Now</button>
+                    </form>
                 </div>
                 
             </div>
@@ -146,6 +150,7 @@ export default {
             successMessage : "",
             errorStatus : true,
             errorMessage : "* You add to select a card or add new card on User Page",
+            canBuy: true,
             game:{
                 id:'',
                 image:'',
@@ -205,8 +210,9 @@ export default {
                     this.successMessage = "You haved successfully make the payment"
                     addDocument(paidGame)
                 }else{
-                this.errorStatus = true;
-                this.errorMessage = "You don't have enough balance"
+                    this.errorStatus = true;
+                    this.errorMessage = "You don't have enough balance"
+                    this.canbuy = false
                 }
                 }else{
                     this.errorStatus = true;
@@ -249,6 +255,7 @@ export default {
                 }else{
                     this.errorStatus = true;
                     this.errorMessage = "You don't have enough balance"
+                    this.canbuy = false
                 }
             }
         },
